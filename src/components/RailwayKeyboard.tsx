@@ -102,8 +102,8 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
     const animate = (time: number) => {
       if (previousTimeRef.current !== undefined) {
         const deltaTime = time - (previousTimeRef.current || time);
-        // Approximately 60 pixels per second scroll speed (base)
-        setScrollOffset(prev => prev + deltaTime * 0.06 * scrollVelocity);
+        // Approximately 240 pixels per second scroll speed (base)
+        setScrollOffset(prev => prev + deltaTime * 0.24 * scrollVelocity);
       }
       previousTimeRef.current = time;
       requestRef.current = requestAnimationFrame(animate);

@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const theme = WAVEFORM_THEMES[waveform];
 
-  const velocityOptions = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0];
+  const velocityOptions = [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0];
 
   return (
     <header className="h-20 shrink-0 border-b border-white/10 flex items-center justify-between px-8 bg-[#0a0a0a] z-50">
