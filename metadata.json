@@ -1,0 +1,6 @@
+{
+  "name": "Railway Keyboard",
+  "description": "An interactive instrument where keys are arranged along a dynamic waveform curve (Sine, Triangle, Sawtooth, Square) and produce corresponding timbres.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
