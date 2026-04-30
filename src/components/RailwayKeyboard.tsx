@@ -56,11 +56,8 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
   }, [waveform]);
 
   const releaseAllNotes = () => {
-    setActiveNotes(prev => {
-      if (prev.size === 0) return prev;
-      synthRef.current?.releaseAll();
-      return new Set();
-    });
+    synthRef.current?.releaseAll();
+    setActiveNotes(new Set());
   };
 
   // Handle stuck notes on unmount or parameter changes
@@ -73,10 +70,14 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
   // Global listeners to prevent stuck notes
   useEffect(() => {
     window.addEventListener('mouseup', releaseAllNotes);
+    window.addEventListener('pointerup', releaseAllNotes);
+    window.addEventListener('pointercancel', releaseAllNotes);
     window.addEventListener('blur', releaseAllNotes);
     
     return () => {
       window.removeEventListener('mouseup', releaseAllNotes);
+      window.removeEventListener('pointerup', releaseAllNotes);
+      window.removeEventListener('pointercancel', releaseAllNotes);
       window.removeEventListener('blur', releaseAllNotes);
     };
   }, []);
@@ -303,14 +304,21 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
               boxShadow: isActive ? `0 0 20px ${theme.glow}` : undefined,
               transition: 'background-color 0.2s, border-color 0.2s, box-shadow 0.2s', // Only transition color/effects
             }}
-            onMouseDown={() => playNote(key.midi)}
-            onMouseUp={() => releaseNote(key.midi)}
-            onMouseLeave={() => isActive && releaseNote(key.midi)}
-            onMouseEnter={(e) => { 
+            onPointerDown={(e) => {
+              (e.target as HTMLButtonElement).setPointerCapture(e.pointerId);
+              playNote(key.midi);
+            }}
+            onPointerUp={(e) => {
+              (e.target as HTMLButtonElement).releasePointerCapture(e.pointerId);
+              releaseNote(key.midi);
+            }}
+            onPointerEnter={(e) => { 
               if (e.buttons === 1) playNote(key.midi); 
             }}
-            onTouchStart={(e) => { e.preventDefault(); playNote(key.midi); }}
-            onTouchEnd={(e) => { e.preventDefault(); releaseNote(key.midi); }}
+            onPointerLeave={() => {
+              if (isActive) releaseNote(key.midi);
+            }}
+            onContextMenu={(e) => e.preventDefault()}
             initial={false}
           >
             {/* No labels purely aesthetic */}
