@@ -7,7 +7,6 @@ interface RailwayKeyboardProps {
   waveform: WaveformType;
   octaveOffset: number;
   volume: number;
-  scrollVelocity: number;
   resetTrigger: number;
   onActiveNoteChange: (note: string | undefined) => void;
 }
@@ -22,7 +21,6 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
   waveform,
   octaveOffset,
   volume,
-  scrollVelocity,
   resetTrigger,
   onActiveNoteChange,
 }) => {
@@ -104,7 +102,7 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
       if (previousTimeRef.current !== undefined) {
         const deltaTime = time - (previousTimeRef.current || time);
         // Approximately 240 pixels per second scroll speed (base)
-        setScrollOffset(prev => prev + deltaTime * 0.24 * scrollVelocity);
+        setScrollOffset(prev => prev + deltaTime * 0.24);
       }
       previousTimeRef.current = time;
       requestRef.current = requestAnimationFrame(animate);
@@ -114,7 +112,7 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
     return () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [scrollVelocity]);
+  }, []);
 
   // Handle Resize
   useEffect(() => {
@@ -144,7 +142,7 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
         return Math.sin(t) >= 0 ? 1 : -1;
       default:
         return 0;
-    }
+      }
   };
 
   const derivativeFunction = (t: number): number => {
@@ -193,14 +191,18 @@ export const RailwayKeyboard: React.FC<RailwayKeyboardProps> = ({
       const octaveIndex = Math.floor(i / 12);
       const units = octaveIndex * 7 + PIANO_LAYOUT[midiIndexInOctave];
       const baseX = units * whiteKeyWidth;
+
+      // Each key has its own velocity: C4 (index 0) = 1.0, then 1.1, 1.2, etc.
+      const velocityMultiplier = 1.0 + (i * 0.05);
       
       // Move Left to Right
-      const currentX = ((baseX + scrollOffset) % loopWidth) - wrapPadding / 2;
+      const currentX = ((baseX + (scrollOffset * velocityMultiplier)) % loopWidth) - wrapPadding / 2;
       
       // Calculate ratio for waveform lookup
       const ratio = currentX / Math.max(availableWidth, 1);
       const t = ratio * 4 * Math.PI;
       const y = centerY - waveformFunction(t) * amplitude;
+// ... (rest of the mapping code)
       
       // Calculate tangential angle
       const deltaT = 0.01;

@@ -9,8 +9,6 @@ interface HeaderProps {
   setOctaveOffset: (o: number) => void;
   volume: number;
   setVolume: (v: number) => void;
-  scrollVelocity: number;
-  setScrollVelocity: (v: number) => void;
   onReset: () => void;
 }
 
@@ -20,13 +18,9 @@ export const Header: React.FC<HeaderProps> = ({
   setOctaveOffset,
   volume,
   setVolume,
-  scrollVelocity,
-  setScrollVelocity,
   onReset,
 }) => {
   const theme = WAVEFORM_THEMES[waveform];
-
-  const velocityOptions = [0.25, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0];
 
   return (
     <header className="h-20 shrink-0 border-b border-white/10 flex items-center justify-between px-8 bg-[#0a0a0a] z-50">
@@ -57,28 +51,6 @@ export const Header: React.FC<HeaderProps> = ({
             <RefreshCw className="w-4 h-4 text-white/50 group-hover:text-white group-active:rotate-180 transition-all duration-300" />
           </div>
         </button>
-
-        {/* Velocity Control */}
-        <div className="flex flex-col gap-1">
-          <span className="text-[9px] uppercase tracking-tighter text-white/30 text-center">
-            Velocity
-          </span>
-          <div className="flex border border-white/10 rounded overflow-hidden p-0.5 bg-white/5">
-            {velocityOptions.map(v => (
-              <button
-                key={v}
-                onClick={() => setScrollVelocity(v)}
-                className={`text-[10px] px-2 py-1 rounded transition-all ${
-                  scrollVelocity === v 
-                    ? 'bg-white/20 text-white font-bold' 
-                    : 'text-white/40 hover:text-white/60 hover:bg-white/5'
-                }`}
-              >
-                {v.toFixed(1)}x
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Octave Transpose */}
         <div className="flex flex-col gap-1">

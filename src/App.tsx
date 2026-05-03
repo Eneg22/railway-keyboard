@@ -14,7 +14,6 @@ export default function App() {
   const [waveform, setWaveform] = useState<WaveformType>('sine');
   const [octaveOffset, setOctaveOffset] = useState(0);
   const [volume, setVolume] = useState(0.75);
-  const [scrollVelocity, setScrollVelocity] = useState(1);
   const [activeNote, setActiveNote] = useState<string | undefined>();
   const [isStarted, setIsStarted] = useState(false);
 
@@ -25,7 +24,6 @@ export default function App() {
 
   const handleReset = () => {
     setOctaveOffset(0);
-    setScrollVelocity(1);
     setVolume(0.75);
     setResetTrigger(prev => prev + 1);
   };
@@ -57,8 +55,6 @@ export default function App() {
         setOctaveOffset={setOctaveOffset}
         volume={volume}
         setVolume={setVolume}
-        scrollVelocity={scrollVelocity}
-        setScrollVelocity={setScrollVelocity}
         onReset={handleReset}
       />
       
@@ -67,7 +63,6 @@ export default function App() {
           waveform={waveform} 
           octaveOffset={octaveOffset} 
           volume={volume} 
-          scrollVelocity={scrollVelocity}
           resetTrigger={resetTrigger}
           onActiveNoteChange={setActiveNote}
         />
